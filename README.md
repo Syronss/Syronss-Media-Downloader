@@ -130,18 +130,38 @@ video-downloader/
 * **Instagram API:** [Instaloader](https://instaloader.github.io/)
 * **Media Processing:** [FFmpeg](https://ffmpeg.org/)
 
+## 🐛 Troubleshooting
+
+**FFmpeg not found?**
+- The app automatically downloads FFmpeg on first run
+- Manual download: [FFmpeg.org](https://ffmpeg.org/download.html)
+
+**Instagram login fails?**
+- Check your username/password
+- Verify 2FA code is correct
+- Try again after a few minutes
+  
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## ⚠️ Disclaimer
 
 This application is developed for educational purposes only. Users are responsible for ensuring that their downloads comply with copyright laws and the terms of service of the respective platforms. The developer assumes no liability for misuse.
 
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 ---
 
 <p align="center">
-Made with ❤️ by <a href="https://github.com/Syronss">Syronss</a>
+Made by  <a href="https://github.com/Syronss">Syronss</a>
 </p>
 
 ```
