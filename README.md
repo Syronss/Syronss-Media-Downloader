@@ -1,5 +1,4 @@
 
-markdown
 # 🎬 Syronss's Media Downloader
 
 <p align="center">
