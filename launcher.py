@@ -51,7 +51,7 @@ class LauncherUI:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Syronss's Media Downloader")
-        self.root.geometry("500x250")
+        self.root.geometry("500x280")
         self.root.resizable(False, False)
         
         # Modern görünüm
@@ -61,7 +61,7 @@ class LauncherUI:
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width - 500) // 2
-        y = (screen_height - 250) // 2
+        y = (screen_height - 280) // 2
         self.root.geometry(f"+{x}+{y}")
         
         # Ana frame
@@ -96,7 +96,7 @@ class LauncherUI:
         
         # Detay
         self.detail_label = tk.Label(main_frame, text="", font=("Segoe UI", 9), 
-                                     fg="#666666", bg="#1a1a2e")
+                                     fg="#666666", bg="#1a1a2e", wraplength=450)
         self.detail_label.pack(pady=5)
         
         self.app_ready = False
@@ -196,14 +196,15 @@ class LauncherUI:
         ffmpeg_dir = get_ffmpeg_dir()
         ffmpeg_exe = ffmpeg_dir / "ffmpeg.exe"
         
-        if ffmpeg_exe.exists():
+        if ffmpeg_exe.exists() and self.verify_ffmpeg_works(ffmpeg_exe):
             os.environ["PATH"] = str(ffmpeg_dir) + os.pathsep + os.environ.get("PATH", "")
             self.launch_app()
             return
         
         # 3. Uygulama yanında bin/ klasöründe var mı?
         app_bin = get_app_dir() / "bin"
-        if (app_bin / "ffmpeg.exe").exists():
+        app_ffmpeg = app_bin / "ffmpeg.exe"
+        if app_ffmpeg.exists() and self.verify_ffmpeg_works(app_ffmpeg):
             os.environ["PATH"] = str(app_bin) + os.pathsep + os.environ.get("PATH", "")
             self.launch_app()
             return
@@ -218,6 +219,19 @@ class LauncherUI:
                                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
             return result.returncode == 0
         except FileNotFoundError:
+            return False
+
+    def verify_ffmpeg_works(self, ffmpeg_path):
+        """FFmpeg dosyasının çalışıp çalışmadığını doğrula."""
+        try:
+            result = subprocess.run(
+                [str(ffmpeg_path), '-version'],
+                capture_output=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0,
+                timeout=10
+            )
+            return result.returncode == 0
+        except Exception:
             return False
 
     def ask_ffmpeg_download(self):
@@ -246,18 +260,24 @@ class LauncherUI:
 
     def download_ffmpeg(self):
         ffmpeg_dir = get_ffmpeg_dir()
+        
+        # Eski dosyaları temizle
+        if ffmpeg_dir.exists():
+            try:
+                shutil.rmtree(ffmpeg_dir)
+            except Exception:
+                pass
+        
         ffmpeg_dir.mkdir(parents=True, exist_ok=True)
         
         # Windows için gyan.dev'den essentials build
         url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
         zip_path = ffmpeg_dir / "ffmpeg_download.zip"
         
-        self.update_status("FFmpeg indiriliyor...", "Bu işlem biraz sürebilir", 0, "determinate")
+        self.update_status("FFmpeg indiriliyor...", "Bağlantı kuruluyor...", 0, "determinate")
         
         try:
-            # SSL context for HTTPS
-            ssl_context = ssl.create_default_context()
-            
+            # İndirme işlemi
             def report_progress(block_num, block_size, total_size):
                 if total_size > 0:
                     percent = min((block_num * block_size / total_size) * 100, 100)
@@ -267,45 +287,112 @@ class LauncherUI:
                                       f"{downloaded_mb:.1f} / {total_mb:.1f} MB (%{percent:.0f})", 
                                       percent)
 
+            # SSL context oluştur
+            ssl_context = ssl.create_default_context()
+            
+            # İndirmeyi başlat
             urllib.request.urlretrieve(url, zip_path, report_progress)
+            
+            # ZIP dosyası var mı kontrol et
+            if not zip_path.exists():
+                raise Exception("ZIP dosyası indirilemedi!")
+            
+            zip_size = zip_path.stat().st_size
+            if zip_size < 1000000:  # 1MB'dan küçükse hata var
+                raise Exception(f"ZIP dosyası çok küçük ({zip_size} bytes), indirme başarısız olmuş olabilir.")
             
             self.update_status("FFmpeg kuruluyor...", "Arşivden çıkarılıyor...", mode="indeterminate")
             
+            # ZIP'i aç ve dosyaları çıkar
+            ffmpeg_found = False
+            ffprobe_found = False
+            
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                # Zip içindeki exe'leri bul ve çıkar
-                for name in zip_ref.namelist():
-                    if name.endswith("bin/ffmpeg.exe"):
-                        self.extract_file(zip_ref, name, ffmpeg_dir / "ffmpeg.exe")
-                    elif name.endswith("bin/ffprobe.exe"):
-                        self.extract_file(zip_ref, name, ffmpeg_dir / "ffprobe.exe")
+                # Zip içindeki tüm dosyaları listele
+                all_files = zip_ref.namelist()
+                
+                self.update_status("FFmpeg kuruluyor...", f"Arşivde {len(all_files)} dosya bulundu...", mode="indeterminate")
+                
+                # ffmpeg.exe ve ffprobe.exe dosyalarını bul
+                for name in all_files:
+                    # Dosya adını al (path'siz)
+                    basename = os.path.basename(name)
+                    
+                    if basename == "ffmpeg.exe":
+                        self.update_status("FFmpeg kuruluyor...", "ffmpeg.exe çıkarılıyor...", mode="indeterminate")
+                        self.extract_file_safe(zip_ref, name, ffmpeg_dir / "ffmpeg.exe")
+                        ffmpeg_found = True
+                        
+                    elif basename == "ffprobe.exe":
+                        self.update_status("FFmpeg kuruluyor...", "ffprobe.exe çıkarılıyor...", mode="indeterminate")
+                        self.extract_file_safe(zip_ref, name, ffmpeg_dir / "ffprobe.exe")
+                        ffprobe_found = True
+                    
+                    if ffmpeg_found and ffprobe_found:
+                        break
 
             # Zip'i sil
             try:
                 zip_path.unlink()
-            except:
+            except Exception:
                 pass
+            
+            # Dosyaların çıkarıldığını kontrol et
+            ffmpeg_exe = ffmpeg_dir / "ffmpeg.exe"
+            ffprobe_exe = ffmpeg_dir / "ffprobe.exe"
+            
+            if not ffmpeg_exe.exists():
+                raise Exception("ffmpeg.exe çıkarılamadı! Arşiv yapısı beklenenden farklı.")
+            
+            # Dosya boyutunu kontrol et (en az 50MB olmalı)
+            ffmpeg_size = ffmpeg_exe.stat().st_size
+            if ffmpeg_size < 50000000:  # 50MB
+                raise Exception(f"ffmpeg.exe dosyası çok küçük ({ffmpeg_size / 1024 / 1024:.1f} MB). Dosya bozuk olabilir.")
+            
+            # FFmpeg'in çalışıp çalışmadığını test et
+            self.update_status("FFmpeg test ediliyor...", "Çalıştırılabilirlik kontrol ediliyor...", mode="indeterminate")
+            
+            if not self.verify_ffmpeg_works(ffmpeg_exe):
+                raise Exception("FFmpeg yüklendi ancak çalıştırılamıyor! Dosya bozuk olabilir.")
             
             # PATH'e ekle
             os.environ["PATH"] = str(ffmpeg_dir) + os.pathsep + os.environ.get("PATH", "")
             
-            self.update_status("FFmpeg kuruldu!", "", 100, "determinate")
-            self.root.after(500, self.launch_app)
+            # Başarı mesajı
+            self.update_status("FFmpeg başarıyla kuruldu!", 
+                             f"Konum: {ffmpeg_dir}", 100, "determinate")
+            self.root.after(1500, self.launch_app)
             
         except Exception as e:
-            error_msg = f"FFmpeg indirilemedi:\n{str(e)}"
+            error_msg = f"FFmpeg kurulum hatası:\n{str(e)}"
             self.root.after(0, lambda: self.handle_ffmpeg_error(error_msg))
 
-    def extract_file(self, zip_ref, src_name, dest_path):
-        with zip_ref.open(src_name) as source:
-            with open(dest_path, "wb") as target:
-                shutil.copyfileobj(source, target)
+    def extract_file_safe(self, zip_ref, src_name, dest_path):
+        """Dosyayı güvenli bir şekilde çıkar."""
+        try:
+            with zip_ref.open(src_name) as source:
+                # Dosyayı parça parça kopyala (bellek sorunlarını önlemek için)
+                with open(dest_path, "wb") as target:
+                    while True:
+                        chunk = source.read(1024 * 1024)  # 1MB parçalar
+                        if not chunk:
+                            break
+                        target.write(chunk)
+            
+            # Dosyanın yazıldığını doğrula
+            if not dest_path.exists():
+                raise Exception(f"{dest_path.name} oluşturulamadı!")
+                
+        except Exception as e:
+            raise Exception(f"Dosya çıkarma hatası ({src_name}): {str(e)}")
 
     def handle_ffmpeg_error(self, error_msg):
         result = messagebox.askyesno(
             "FFmpeg İndirme Hatası",
             f"{error_msg}\n\n"
             "FFmpeg olmadan devam etmek ister misiniz?\n"
-            "(Bazı özellikler çalışmayabilir)"
+            "(Bazı özellikler çalışmayabilir)\n\n"
+            "Manuel indirme için: https://ffmpeg.org/download.html"
         )
         
         if result:
@@ -323,7 +410,7 @@ class LauncherUI:
     def close_and_start(self):
         try:
             self.progress.stop()
-        except:
+        except Exception:
             pass
         
         self.root.destroy()
