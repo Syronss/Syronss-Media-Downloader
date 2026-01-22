@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# PyInstaller
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# FFmpeg binaries (downloaded at runtime)
+bin/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local settings
+.video_downloader_settings.json
+
+# Instaloader sessions
+.instaloader-session-*
