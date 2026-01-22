@@ -55,27 +55,39 @@ Syronss's Media Downloader offers a sleek GUI and robust backend to handle vario
 
 1.  **Clone the Repository**
 ```bash
-    git clone https://github.com/Syronss/video-downloader.git
-    cd video-downloader
+git clone https://github.com/Syronss/video-downloader.git
+cd video-downloader
 ```
 
-2.  **Set up a Virtual Environment (Recommended)**
+2.  **Install Dependencies**
 ```bash
-    python -m venv .venv
-    # Activate the virtual environment:
-    .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-3.  **Install Dependencies**
+3.  **Launch the Application**
 ```bash
-    pip install -r requirements.txt
+python launcher.py
 ```
+> **Note:** Always run `launcher.py` instead of `main.py` to ensure FFmpeg and dependencies are handled correctly.
 
-4.  **Launch the Application**
+### Optional: Virtual Environment
+
+If you prefer to use a virtual environment (recommended for isolated development):
+
 ```bash
-    python launcher.py
+# Create virtual environment
+python -m venv .venv
+
+# Activate it
+.venv\Scripts\activate  # Windows
+# source .venv/bin/activate  # Linux/Mac
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+python launcher.py
 ```
-    *(Note: Run `launcher.py` instead of `main.py` to ensure FFmpeg is handled correctly.)*
 
 ## 📖 Usage
 
@@ -91,24 +103,26 @@ To download content from private accounts or verify age-restricted content:
 3.  If 2FA is enabled, the app will prompt you for the verification code.
 > 🔒 **Privacy Note:** Your credentials are used locally for the session and are not stored permanently strictly beyond the session file.
 
-## 🔧 Building (Create Standalone .exe)
+## 🔧 Building Executable (Create Standalone .exe)
 
 You can convert this Python script into a standalone Windows executable file.
 
-1.  **Install PyInstaller**
+1.  **Install PyInstaller** (if not already installed)
 ```bash
-    pip install pyinstaller
+pip install pyinstaller
 ```
 
 2.  **Run the Build Script**
 ```bash
-    python build_app.py
+python build_app.py
 ```
 
 3.  **Locate the App**
-    The compiled application will be available in the `dist/SyronssMediaDownloader/` directory.
+    * The compiled application will be available in the `dist/SyronssMediaDownloader/` directory.
+    * A ready-to-distribute ZIP file will also be created in `dist/`.
 
 ## 📁 Project Structure
+
 ```text
 video-downloader/
 ├── main.py           # Main GUI application logic
@@ -137,6 +151,11 @@ video-downloader/
 - Check your username/password
 - Verify 2FA code is correct
 - Try again after a few minutes
+
+**Dependencies not installing?**
+- Make sure Python 3.8+ is installed
+- Try running: `pip install --upgrade pip`
+- Then: `pip install -r requirements.txt`
 
 ## 📄 License
 
