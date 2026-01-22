@@ -1,122 +1,149 @@
+
+```markdown
 # 🎬 Syronss's Media Downloader
 
-Modern ve kullanıcı dostu bir video indirme uygulaması. YouTube, TikTok ve Instagram'dan video ve MP3 indirebilirsiniz.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black" alt="Platform">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge" alt="UI Framework">
+</p>
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
+<p align="center">
+  <strong>A modern, powerful, and user-friendly media downloader application built with Python.</strong>
+  <br>
+  Download videos and audio from YouTube, TikTok, and Instagram with ease.
+</p>
 
-## ✨ Özellikler
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-usage">Usage</a> •
+  <a href="#-building-executable">Build EXE</a> •
+  <a href="#-tech-stack">Tech Stack</a>
+</p>
 
-- 📺 **YouTube** - Video ve MP3 indirme (4K dahil tüm kaliteler)
-- 🎵 **TikTok** - Filigranlı veya filigranlı video indirme
-- 📸 **Instagram** - Post, Reel ve IGTV indirme (2FA desteği ile giriş)
-- 🎨 **Modern UI** - CustomTkinter ile şık karanlık tema
-- 📥 **Kuyruk Sistemi** - Birden fazla video sıraya ekleyin
-- ⚡ **Otomatik FFmpeg** - İlk çalıştırmada otomatik indirilir
-- 📊 **Kalite Seçimi** - 360p'den 4K'ya kadar kalite seçeneği
-- 🔄 **İlerleme Takibi** - Gerçek zamanlı indirme durumu
+---
 
-## 📋 Gereksinimler
+## ✨ Features
 
-- Python 3.8+
-- Windows 10/11
+Syronss's Media Downloader offers a sleek GUI and robust backend to handle various media platforms.
 
-## 🚀 Kurulum
+* 📺 **YouTube Downloader**
+    * Download Videos (up to 4K/2160p resolution).
+    * Convert to MP3 (High Quality).
+* 🎵 **TikTok Support**
+    * Download viral TikTok videos effortlessly.
+* 📸 **Instagram Integration**
+    * Download Posts, Reels, and IGTV.
+    * **Advanced Auth:** Supports login with 2FA (Two-Factor Authentication) for private content.
+    * Secure session management.
+* 🎨 **Modern UI**
+    * Built with `CustomTkinter` for a clean, dark-themed experience.
+    * Real-time progress bars and status updates.
+* 📥 **Queue System**
+    * Add multiple links to a queue and batch download them automatically.
+* ⚡ **Smart Dependencies**
+    * **Auto-FFmpeg:** Automatically checks, downloads, and configures FFmpeg on the first run. No manual setup required!
 
-### Kaynak Koddan Çalıştırma
+## 📋 Prerequisites
 
-```bash
-# Repo'yu klonlayın
-git clone https://github.com/Syronss/video-downloader.git
-cd video-downloader
+* **OS:** Windows 10 / 11
+* **Python:** Version 3.8 or higher
 
-# Sanal ortam oluşturun (önerilen)
-python -m venv .venv
-.venv\Scripts\activate
+## 🚀 Installation
 
-# Bağımlılıkları yükleyin
-pip install -r requirements.txt
+### Running from Source
 
-# Uygulamayı başlatın
-python launcher.py
-```
+1.  **Clone the Repository**
+    ```bash
+    git clone [https://github.com/Syronss/video-downloader.git](https://github.com/Syronss/video-downloader.git)
+    cd video-downloader
+    ```
 
-### İlk Çalıştırma
+2.  **Set up a Virtual Environment (Recommended)**
+    ```bash
+    python -m venv .venv
+    # Activate the virtual environment:
+    .venv\Scripts\activate
+    ```
 
-Uygulama ilk başlatıldığında:
-1. Gerekli Python kütüphanelerini kontrol eder
-2. FFmpeg'i otomatik olarak indirir (~100MB)
-3. Ana uygulamayı başlatır
+3.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## 📖 Kullanım
+4.  **Launch the Application**
+    ```bash
+    python launcher.py
+    ```
+    *(Note: Run `launcher.py` instead of `main.py` to ensure FFmpeg is handled correctly.)*
 
-1. **URL Yapıştırın** - YouTube, TikTok veya Instagram video linkini girin
-2. **Format Seçin** - Video veya MP3
-3. **Kalite Seçin** - Mevcut kalite seçeneklerinden birini seçin
-4. **İndirin** - "İNDİR" butonuna tıklayın
+## 📖 Usage
 
-### Instagram Giriş
+1.  **Paste URL:** Copy a link from YouTube, TikTok, or Instagram and paste it into the input field.
+2.  **Select Format:** Choose between **Video** (MP4) or **Audio** (MP3).
+3.  **Choose Quality:** Select your preferred resolution (from 360p up to 4K).
+4.  **Download:** Click the **DOWNLOAD** button or **Add to Queue**.
 
-Private içeriklere erişmek için:
-1. Sol alttaki "📸 Instagram" butonuna tıklayın
-2. Kullanıcı adı ve şifrenizi girin
-3. 2FA etkinse doğrulama kodunu girin
+### 📸 Instagram Login (For Private Content)
+To download content from private accounts or verify age-restricted content:
+1.  Click the **"📸 Instagram"** button at the bottom left.
+2.  Enter your username and password.
+3.  If 2FA is enabled, the app will prompt you for the verification code.
+> 🔒 **Privacy Note:** Your credentials are used locally for the session and are not stored permanently strictly beyond the session file.
 
-> ⚠️ Giriş bilgileriniz sadece oturumunuz süresince saklanır
+## 🔧 Building (Create Standalone .exe)
 
-## 🔧 Build (EXE Oluşturma)
+You can convert this Python script into a standalone Windows executable file.
 
-Standalone .exe oluşturmak için:
+1.  **Install PyInstaller**
+    ```bash
+    pip install pyinstaller
+    ```
 
-```bash
-# PyInstaller'ı yükleyin
-pip install pyinstaller
+2.  **Run the Build Script**
+    ```bash
+    python build_app.py
+    ```
 
-# Build script'ini çalıştırın
-python build_app.py
-```
+3.  **Locate the App**
+    The compiled application will be available in the `dist/SyronssMediaDownloader/` directory.
 
-Oluşturulan uygulama `dist/SyronssMediaDownloader/` klasöründe bulunur.
+## 📁 Project Structure
 
-## 📁 Proje Yapısı
-
-```
+```text
 video-downloader/
-├── main.py           # Ana UI uygulaması
-├── downloader.py     # İndirme modülleri (YouTube, TikTok, Instagram)
-├── utils.py          # Yardımcı fonksiyonlar
-├── launcher.py       # Bağımlılık yönetimi ve başlatıcı
-├── build_app.py      # PyInstaller build script
-├── requirements.txt  # Python bağımlılıkları
-└── README.md
+├── main.py           # Main GUI application logic
+├── downloader.py     # Backend logic (yt-dlp & instaloader wrappers)
+├── launcher.py       # Entry point (Handles FFmpeg checks & dependencies)
+├── utils.py          # Helper functions (URL detection, formatting)
+├── build_app.py      # Automated PyInstaller build script
+├── requirements.txt  # Project dependencies
+└── README.md         # Documentation
+
 ```
 
-## 🛠️ Teknik Detaylar
+## 🛠️ Tech Stack
 
-- **UI Framework**: CustomTkinter
-- **Video İndirme**: yt-dlp
-- **Instagram API**: Instaloader
-- **MP3 Dönüşüm**: FFmpeg
+* **GUI:** [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter)
+* **Core Downloading:** [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+* **Instagram API:** [Instaloader](https://instaloader.github.io/)
+* **Media Processing:** [FFmpeg](https://ffmpeg.org/)
 
-## 📄 Lisans
+## 📄 License
 
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+This project is licensed under the MIT License. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
 
-## 🤝 Katkıda Bulunma
+## ⚠️ Disclaimer
 
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
-4. Branch'i push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## ⚠️ Sorumluluk Reddi
-
-Bu uygulama yalnızca eğitim amaçlıdır. İndirdiğiniz içeriklerin telif hakkı yasalarına uygun olduğundan emin olun. Uygulama geliştiricileri, kullanıcıların yasa dışı kullanımından sorumlu değildir.
+This application is developed for educational purposes only. Users are responsible for ensuring that their downloads comply with copyright laws and the terms of service of the respective platforms. The developer assumes no liability for misuse.
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/Syronss">Syronss</a>
+Made with ❤️ by <a href="https://github.com/Syronss">Syronss</a>
 </p>
+
+```
+
