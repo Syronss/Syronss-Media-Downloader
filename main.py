@@ -81,7 +81,6 @@ class VideoPreviewFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
         self.configure(fg_color=("gray90", "gray17"), corner_radius=12)
         self.video_info = None
-        self.size_label.configure(text="")
         
         self.title_label = ctk.CTkLabel(self, text="📺 Video Önizleme", 
                                          font=ctk.CTkFont(size=14, weight="bold"))
