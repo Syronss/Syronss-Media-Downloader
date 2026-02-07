@@ -6,7 +6,7 @@ import os
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Callable, Optional, Dict, Any
+from typing import Callable, Optional, Dict, Any, Tuple
 from dataclasses import dataclass
 import yt_dlp
 import instaloader
@@ -37,6 +37,7 @@ class DownloadResult:
     filesize: int = 0
     error: str = ""
     platform: str = ""
+    source_url: str = ""
 
 
 class ProgressCallback:
@@ -61,7 +62,7 @@ class BaseDownloader(ABC):
     @abstractmethod
     def download(self, url: str, as_audio: bool = False, quality: str = "best",
                  progress_callback: Optional[ProgressCallback] = None,
-                 filename_template: str = None) -> DownloadResult:
+                 filename_template: str = None, download_subtitles: bool = False) -> DownloadResult:
         pass
     
     @abstractmethod
@@ -87,7 +88,8 @@ class YTDLPDownloader(BaseDownloader):
         self.filename_template = "%(title)s"
     
     def _get_ydl_opts(self, as_audio: bool, quality: str = "best",
-                       progress_hook: Callable = None, filename_template: str = None) -> dict:
+                       progress_hook: Callable = None, filename_template: str = None,
+                       download_subtitles: bool = False) -> dict:
         ffmpeg_path = check_and_get_ffmpeg()
         template = filename_template or self.filename_template
         
@@ -121,6 +123,16 @@ class YTDLPDownloader(BaseDownloader):
                 opts['merge_output_format'] = 'mp4'
             else:
                 opts['format'] = '22/18/best[vcodec!=none][acodec!=none]/best'
+
+        if download_subtitles and not as_audio:
+            opts.update({
+                'writesubtitles': True,
+                'writeautomaticsub': True,
+                'subtitleslangs': ['tr', 'en', '.*'],
+                'skip_download': False,
+            })
+            if ffmpeg_path:
+                opts['embedsubtitles'] = True
         
         if progress_hook:
             opts['progress_hooks'] = [progress_hook]
@@ -129,8 +141,8 @@ class YTDLPDownloader(BaseDownloader):
     
     def download(self, url: str, as_audio: bool = False, quality: str = "best",
                  progress_callback: Optional[ProgressCallback] = None,
-                 filename_template: str = None) -> DownloadResult:
-        result = DownloadResult(success=False, platform=self.platform)
+                 filename_template: str = None, download_subtitles: bool = False) -> DownloadResult:
+        result = DownloadResult(success=False, platform=self.platform, source_url=url)
         downloaded_file = None
         
         def progress_hook(d):
@@ -152,7 +164,7 @@ class YTDLPDownloader(BaseDownloader):
                     progress_callback.update(100, "Tamamlandı!", "")
         
         try:
-            opts = self._get_ydl_opts(as_audio, quality, progress_hook, filename_template)
+            opts = self._get_ydl_opts(as_audio, quality, progress_hook, filename_template, download_subtitles)
             
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(url, download=True)
@@ -170,6 +182,8 @@ class YTDLPDownloader(BaseDownloader):
                     result.filename = os.path.basename(downloaded_file) if downloaded_file else info.get('title', 'video')
                     result.filepath = downloaded_file or ""
                     result.filesize = info.get('filesize', 0) or 0
+                    if not result.filesize and downloaded_file and Path(downloaded_file).exists():
+                        result.filesize = Path(downloaded_file).stat().st_size
         
         except Exception as e:
             result.error = str(e)
@@ -189,6 +203,7 @@ class YTDLPDownloader(BaseDownloader):
                         'uploader': info.get('uploader', info.get('channel', 'Bilinmiyor')),
                         'view_count': info.get('view_count', 0),
                         'qualities': self._get_available_qualities(info),
+                        'filesize': info.get('filesize') or info.get('filesize_approx', 0) or 0,
                     }
         except Exception as e:
             return {'error': str(e)}
@@ -392,38 +407,40 @@ class InstagramDownloader(BaseDownloader):
     
     def download(self, url: str, as_audio: bool = False, quality: str = "best",
                  progress_callback: Optional[ProgressCallback] = None,
-                 filename_template: str = None) -> DownloadResult:
-        result = DownloadResult(success=False, platform="instagram")
+                 filename_template: str = None, download_subtitles: bool = False) -> DownloadResult:
+        result = DownloadResult(success=False, platform="instagram", source_url=url)
         
         try:
             if progress_callback:
                 progress_callback.update(10, "Bağlanılıyor...", "")
             
+            story_username, story_id = self._extract_story_identifiers(url)
+            if story_username and story_id:
+                if progress_callback:
+                    progress_callback.update(30, "Hikaye bilgileri alınıyor...", "")
+                return self._download_story(story_username, story_id, progress_callback, url)
+
             shortcode = self._extract_shortcode(url)
             if not shortcode:
                 result.error = "Geçersiz Instagram URL'si"
                 return result
-            
+
             if progress_callback:
                 progress_callback.update(30, "Video bilgileri alınıyor...", "")
-            
+
             post = instaloader.Post.from_shortcode(self.loader.context, shortcode)
-            
+
             if progress_callback:
                 progress_callback.update(50, "İndiriliyor...", "")
-            
-            self.loader.download_post(post, target=self.download_path)
-            
-            video_file = None
-            for file in self.download_path.iterdir():
-                if file.suffix == '.mp4' and shortcode in file.name:
-                    video_file = file
-                    break
-            
+
+            self.loader.download_post(post, target=str(self.download_path))
+
+            video_file = self._find_latest_downloaded_file(shortcode)
+
             if video_file:
                 if progress_callback:
                     progress_callback.update(100, "Tamamlandı!", "")
-                
+
                 result.success = True
                 result.filename = video_file.name
                 result.filepath = str(video_file)
@@ -442,6 +459,16 @@ class InstagramDownloader(BaseDownloader):
     
     def get_info(self, url: str) -> Dict[str, Any]:
         try:
+            story_username, story_id = self._extract_story_identifiers(url)
+            if story_username and story_id:
+                return {
+                    'title': f"Story • @{story_username}",
+                    'uploader': story_username,
+                    'thumbnail': '',
+                    'duration': 0,
+                    'qualities': ['best'],
+                }
+
             shortcode = self._extract_shortcode(url)
             if shortcode:
                 post = instaloader.Post.from_shortcode(self.loader.context, shortcode)
@@ -462,12 +489,73 @@ class InstagramDownloader(BaseDownloader):
             r'instagram\.com/p/([A-Za-z0-9_-]+)',
             r'instagram\.com/reel/([A-Za-z0-9_-]+)',
             r'instagram\.com/tv/([A-Za-z0-9_-]+)',
+            r'instagram\.com/reels/([A-Za-z0-9_-]+)',
         ]
         for pattern in patterns:
             match = re.search(pattern, url)
             if match:
                 return match.group(1)
         return None
+
+
+    def _find_latest_downloaded_file(self, shortcode: str) -> Optional[Path]:
+        candidates = [
+            file for file in self.download_path.glob(f"*{shortcode}*.mp4")
+            if file.is_file()
+        ]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda file: file.stat().st_mtime)
+
+    def _extract_story_identifiers(self, url: str) -> Tuple[Optional[str], Optional[str]]:
+        import re
+
+        match = re.search(r'instagram\.com/stories/([^/]+)/([^/?#]+)', url)
+        if not match:
+            return None, None
+
+        username = match.group(1)
+        story_id = match.group(2).split('?')[0]
+        if not username or not story_id:
+            return None, None
+
+        return username, story_id
+
+    def _download_story(self, username: str, story_id: str, progress_callback: Optional[ProgressCallback], source_url: str) -> DownloadResult:
+        result = DownloadResult(success=False, platform="instagram", source_url=source_url)
+
+        profile = instaloader.Profile.from_username(self.loader.context, username)
+        found_story = None
+        for story in self.loader.get_stories(userids=[profile.userid]):
+            for item in story.get_items():
+                if str(item.mediaid) == story_id:
+                    found_story = item
+                    break
+            if found_story:
+                break
+
+        if not found_story:
+            result.error = "Hikaye bulunamadı veya süresi dolmuş"
+            return result
+
+        if progress_callback:
+            progress_callback.update(60, "Instagram hikayesi indiriliyor...", "")
+
+        self.loader.download_storyitem(found_story, target=str(self.download_path))
+
+        downloaded_file = self._find_latest_downloaded_file(story_id)
+        if not downloaded_file:
+            result.error = "Hikaye dosyası bulunamadı"
+            return result
+
+        if progress_callback:
+            progress_callback.update(100, "Tamamlandı!", "")
+
+        result.success = True
+        result.filename = downloaded_file.name
+        result.filepath = str(downloaded_file)
+        result.filesize = downloaded_file.stat().st_size
+        return result
 
 
 def create_downloader(platform: str, download_path: Path) -> BaseDownloader:
@@ -478,5 +566,7 @@ def create_downloader(platform: str, download_path: Path) -> BaseDownloader:
         return YTDLPDownloader(download_path, 'tiktok')
     elif platform == 'instagram':
         return InstagramDownloader(download_path)
+    elif platform in {'facebook', 'twitter', 'vimeo', 'dailymotion', 'twitch'}:
+        return YTDLPDownloader(download_path, platform)
     else:
         raise ValueError(f"Desteklenmeyen platform: {platform}")
