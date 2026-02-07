@@ -10,7 +10,7 @@
 <p align="center">
   <strong>A modern, powerful, and user-friendly media downloader application built with Python.</strong>
   <br>
-  Download videos and audio from YouTube, TikTok, and Instagram with ease.
+  Download videos and audio from YouTube, TikTok, Instagram, Facebook, X (Twitter), Vimeo, Dailymotion, and Twitch with ease.
 </p>
 
 <p align="center">
@@ -33,14 +33,20 @@ Syronss's Media Downloader offers a sleek GUI and robust backend to handle vario
 * 🎵 **TikTok Support**
     * Download viral TikTok videos effortlessly.
 * 📸 **Instagram Integration**
-    * Download Posts, Reels, and IGTV.
+    * Download Posts, Reels, IGTV, and Stories with automatic media detection (video/photo).
+    * **Instagram Smart Mode:** Dedicated UI controls for Post/Reel/Story type and media preference (Auto/Video/Image).
     * **Advanced Auth:** Supports login with 2FA (Two-Factor Authentication) for private content.
     * Secure session management.
+* 🌐 **More Platform Coverage**
+    * Facebook videos, X (Twitter) posts, Vimeo, Dailymotion, and Twitch VOD links are now supported through yt-dlp.
 * 🎨 **Modern UI**
     * Built with `CustomTkinter` for a clean, dark-themed experience.
     * Real-time progress bars and status updates.
+* 📝 **Subtitle Support (YouTube)**
+    * Optional subtitle download with auto-generated subtitle fallback and embedding when FFmpeg is available.
 * 📥 **Queue System**
     * Add multiple links to a queue and batch download them automatically.
+    * Duplicate queue protection prevents accidental repeated downloads.
 * ⚡ **Smart Dependencies**
     * **Auto-FFmpeg:** Automatically checks, downloads, and configures FFmpeg on the first run. No manual setup required!
 
@@ -91,7 +97,7 @@ python launcher.py
 
 ## 📖 Usage
 
-1.  **Paste URL:** Copy a link from YouTube, TikTok, or Instagram and paste it into the input field.
+1.  **Paste URL:** Copy a link from YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, or Twitch and paste it into the input field. Tracking parameters are cleaned automatically.
 2.  **Select Format:** Choose between **Video** (MP4) or **Audio** (MP3).
 3.  **Choose Quality:** Select your preferred resolution (from 360p up to 4K).
 4.  **Download:** Click the **DOWNLOAD** button or **Add to Queue**.
