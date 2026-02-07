@@ -30,13 +30,16 @@ FILENAME_TEMPLATES = {
 
 class QueueItem:
     def __init__(self, url: str, platform: str, quality: str = "best", 
-                 as_audio: bool = False, title: str = "", download_subtitles: bool = False):
+                 as_audio: bool = False, title: str = "", download_subtitles: bool = False,
+                 instagram_content_type: str = "auto", instagram_media_mode: str = "auto"):
         self.url = url
         self.platform = platform
         self.quality = quality
         self.as_audio = as_audio
         self.title = title or url[:50]
         self.download_subtitles = download_subtitles
+        self.instagram_content_type = instagram_content_type
+        self.instagram_media_mode = instagram_media_mode
         self.status = "pending"
         self.progress = 0
         self.error = ""
@@ -61,6 +64,10 @@ class QueueItemWidget(ctk.CTkFrame):
         quality_text = "MP3" if item.as_audio else f"{item.quality}p" if item.quality != "best" else "En İyi"
         if item.download_subtitles and not item.as_audio:
             quality_text += " • SUB"
+        if item.platform == "instagram":
+            quality_text += f" • {item.instagram_content_type.upper()}"
+            if item.instagram_media_mode != "auto":
+                quality_text += f"/{item.instagram_media_mode.upper()}"
         ctk.CTkLabel(info_frame, text=quality_text, font=ctk.CTkFont(size=10), 
                      text_color=("gray50", "gray60"), anchor="w").pack(fill="x")
         
@@ -402,6 +409,8 @@ class VideoDownloaderApp(ctk.CTk):
         self.format_var = ctk.StringVar(value="video")
         self.quality_var = ctk.StringVar(value="En İyi")
         self.subtitles_var = ctk.BooleanVar(value=False)
+        self.instagram_content_var = ctk.StringVar(value="Otomatik")
+        self.instagram_media_var = ctk.StringVar(value="Otomatik")
         self.is_downloading = False
         self.instagram_downloader: Optional[InstagramDownloader] = None
         self.instagram_username: Optional[str] = None
@@ -443,6 +452,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.create_history_section()
         self.create_footer()
         self.subtitle_checkbox.configure(state="disabled")
+        self.instagram_section.pack_forget()
     
     def create_header(self):
         header_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
@@ -521,6 +531,40 @@ class VideoDownloaderApp(ctk.CTk):
             font=ctk.CTkFont(size=11),
         )
         self.subtitle_checkbox.pack(anchor="w")
+
+
+        self.instagram_section = ctk.CTkFrame(options_frame, fg_color=("gray88", "gray20"), corner_radius=10)
+        self.instagram_section.pack(fill="x", padx=15, pady=(0, 10))
+
+        ctk.CTkLabel(self.instagram_section, text="📸 Instagram Özel Seçenekler",
+                     font=ctk.CTkFont(size=11, weight="bold")).pack(anchor="w", padx=10, pady=(8, 4))
+
+        ig_row = ctk.CTkFrame(self.instagram_section, fg_color="transparent")
+        ig_row.pack(fill="x", padx=10, pady=(0, 8))
+
+        ig_type_frame = ctk.CTkFrame(ig_row, fg_color="transparent")
+        ig_type_frame.pack(side="left", fill="x", expand=True)
+        ctk.CTkLabel(ig_type_frame, text="Tür", font=ctk.CTkFont(size=10)).pack(anchor="w")
+        self.instagram_content_menu = ctk.CTkOptionMenu(
+            ig_type_frame,
+            values=["Otomatik", "Post", "Reel", "Story"],
+            variable=self.instagram_content_var,
+            width=120,
+            height=30,
+        )
+        self.instagram_content_menu.pack(anchor="w", pady=(3, 0))
+
+        ig_media_frame = ctk.CTkFrame(ig_row, fg_color="transparent")
+        ig_media_frame.pack(side="right", fill="x", expand=True)
+        ctk.CTkLabel(ig_media_frame, text="Medya", font=ctk.CTkFont(size=10)).pack(anchor="w")
+        self.instagram_media_menu = ctk.CTkOptionMenu(
+            ig_media_frame,
+            values=["Otomatik", "Video", "Görsel"],
+            variable=self.instagram_media_var,
+            width=120,
+            height=30,
+        )
+        self.instagram_media_menu.pack(anchor="w", pady=(3, 0))
     
     def create_download_button(self):
         btn_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
@@ -621,22 +665,33 @@ class VideoDownloaderApp(ctk.CTk):
             platform = detect_platform(url)
             if platform:
                 icon = get_platform_icon(platform)
-                self.platform_label.configure(text=f"{icon} {platform.capitalize()} tespit edildi",
-                                               text_color=get_platform_color(platform))
+                self.platform_label.configure(
+                    text=f"{icon} {platform.capitalize()} tespit edildi",
+                    text_color=get_platform_color(platform),
+                )
+
                 subtitle_state = "normal" if platform == "youtube" else "disabled"
                 self.subtitle_checkbox.configure(state=subtitle_state)
                 if platform != "youtube":
                     self.subtitles_var.set(False)
+
+                if platform == "instagram":
+                    self.instagram_section.pack(fill="x", padx=15, pady=(0, 10))
+                    self.format_var.set("video")
+                else:
+                    self.instagram_section.pack_forget()
             else:
                 self.platform_label.configure(text="⚠️ Desteklenmeyen platform", text_color="#FF6B6B")
                 self.subtitle_checkbox.configure(state="disabled")
                 self.subtitles_var.set(False)
+                self.instagram_section.pack_forget()
         else:
             self.platform_label.configure(text="")
             self.preview_frame.show_empty()
             self.subtitle_checkbox.configure(state="disabled")
             self.subtitles_var.set(False)
-    
+            self.instagram_section.pack_forget()
+
     def fetch_video_info(self):
         url = normalize_media_url(self.url_entry.get())
         if not url:
@@ -683,6 +738,23 @@ class VideoDownloaderApp(ctk.CTk):
         if quality_labels:
             self.quality_menu.configure(values=quality_labels)
             self.quality_var.set(quality_labels[0])
+
+        if platform == "instagram":
+            content_type = info.get("content_type", "post")
+            content_map = {"post": "Post", "reel": "Reel", "story": "Story", "auto": "Otomatik"}
+            self.instagram_content_var.set(content_map.get(content_type, "Otomatik"))
+
+            raw_media_modes = info.get("media_modes", ["auto", "video", "image"])
+            menu_labels = []
+            reverse_map = {"auto": "Otomatik", "video": "Video", "image": "Görsel"}
+            for mode in raw_media_modes:
+                label = reverse_map.get(mode)
+                if label and label not in menu_labels:
+                    menu_labels.append(label)
+            if "Otomatik" not in menu_labels:
+                menu_labels.insert(0, "Otomatik")
+            self.instagram_media_menu.configure(values=menu_labels)
+            self.instagram_media_var.set(menu_labels[0])
     
     def get_selected_quality(self) -> str:
         quality = self.quality_var.get()
@@ -690,6 +762,15 @@ class VideoDownloaderApp(ctk.CTk):
             return "best"
         return quality.replace("p", "")
     
+
+    def get_instagram_content_type(self) -> str:
+        mapping = {"Otomatik": "auto", "Post": "post", "Reel": "reel", "Story": "story"}
+        return mapping.get(self.instagram_content_var.get(), "auto")
+
+    def get_instagram_media_mode(self) -> str:
+        mapping = {"Otomatik": "auto", "Video": "video", "Görsel": "image"}
+        return mapping.get(self.instagram_media_var.get(), "auto")
+
     def add_to_queue(self):
         url = normalize_media_url(self.url_entry.get())
         if not url:
@@ -708,9 +789,11 @@ class VideoDownloaderApp(ctk.CTk):
         quality = self.get_selected_quality()
         as_audio = self.format_var.get() == "audio"
         subtitles = bool(self.subtitles_var.get()) and platform == "youtube" and not as_audio
+        instagram_content_type = self.get_instagram_content_type() if platform == "instagram" else "auto"
+        instagram_media_mode = self.get_instagram_media_mode() if platform == "instagram" else "auto"
 
         for queued in self.download_queue:
-            if queued.url == url and queued.as_audio == as_audio and queued.quality == quality and queued.download_subtitles == subtitles and queued.status in {"pending", "downloading"}:
+            if queued.url == url and queued.as_audio == as_audio and queued.quality == quality and queued.download_subtitles == subtitles and queued.instagram_content_type == instagram_content_type and queued.instagram_media_mode == instagram_media_mode and queued.status in {"pending", "downloading"}:
                 messagebox.showinfo("Bilgi", "Bu içerik zaten kuyrukta mevcut.")
                 return
 
@@ -721,6 +804,8 @@ class VideoDownloaderApp(ctk.CTk):
             as_audio=as_audio,
             title=title or url[:40],
             download_subtitles=subtitles,
+            instagram_content_type=instagram_content_type,
+            instagram_media_mode=instagram_media_mode,
         )
 
         self.download_queue.append(item)
@@ -792,7 +877,7 @@ class VideoDownloaderApp(ctk.CTk):
                 self.after(0, lambda: self.update_progress(percent, status, speed))
             
             callback = ProgressCallback(progress_update)
-            result = downloader.download(item.url, item.as_audio, item.quality, callback, self.filename_template, item.download_subtitles)
+            result = downloader.download(item.url, item.as_audio, item.quality, callback, self.filename_template, item.download_subtitles, item.instagram_content_type, item.instagram_media_mode)
             
             if result.success:
                 item.status = "completed"
@@ -837,11 +922,13 @@ class VideoDownloaderApp(ctk.CTk):
         
         quality = self.get_selected_quality()
         download_subtitles = bool(self.subtitles_var.get()) and platform == "youtube" and not as_audio
+        instagram_content_type = self.get_instagram_content_type() if platform == "instagram" else "auto"
+        instagram_media_mode = self.get_instagram_media_mode() if platform == "instagram" else "auto"
         
-        thread = threading.Thread(target=self.download_thread, args=(url, platform, as_audio, quality, download_subtitles), daemon=True)
+        thread = threading.Thread(target=self.download_thread, args=(url, platform, as_audio, quality, download_subtitles, instagram_content_type, instagram_media_mode), daemon=True)
         thread.start()
     
-    def download_thread(self, url: str, platform: str, as_audio: bool, quality: str, download_subtitles: bool):
+    def download_thread(self, url: str, platform: str, as_audio: bool, quality: str, download_subtitles: bool, instagram_content_type: str, instagram_media_mode: str):
         try:
             if platform == "instagram" and self.instagram_downloader:
                 downloader = self.instagram_downloader
@@ -852,7 +939,7 @@ class VideoDownloaderApp(ctk.CTk):
                 self.after(0, lambda: self.update_progress(percent, status, speed))
             
             callback = ProgressCallback(progress_update)
-            result = downloader.download(url, as_audio, quality, callback, self.filename_template, download_subtitles)
+            result = downloader.download(url, as_audio, quality, callback, self.filename_template, download_subtitles, instagram_content_type, instagram_media_mode)
             
             self.after(0, lambda: self.handle_download_result(result))
         

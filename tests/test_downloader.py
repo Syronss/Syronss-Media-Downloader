@@ -40,3 +40,26 @@ def test_subtitle_not_enabled_for_audio(monkeypatch, tmp_path: Path) -> None:
     downloader = YTDLPDownloader(tmp_path, "youtube")
     opts = downloader._get_ydl_opts(as_audio=True, quality="best", download_subtitles=True)
     assert "writesubtitles" not in opts
+
+
+def test_extract_instagram_content_type(tmp_path: Path) -> None:
+    downloader = InstagramDownloader(tmp_path)
+    assert downloader._extract_content_type("https://www.instagram.com/p/abc/") == "post"
+    assert downloader._extract_content_type("https://www.instagram.com/reel/abc/") == "reel"
+    assert downloader._extract_content_type("https://www.instagram.com/stories/user/123/") == "story"
+
+
+def test_find_latest_downloaded_file_with_media_mode(tmp_path: Path) -> None:
+    downloader = InstagramDownloader(tmp_path)
+    image_file = tmp_path / "ABC_1.jpg"
+    video_file = tmp_path / "ABC_2.mp4"
+    image_file.write_bytes(b"img")
+    video_file.write_bytes(b"vid")
+
+    latest_auto = downloader._find_latest_downloaded_file("ABC", "auto")
+    latest_video = downloader._find_latest_downloaded_file("ABC", "video")
+    latest_image = downloader._find_latest_downloaded_file("ABC", "image")
+
+    assert latest_auto is not None
+    assert latest_video == video_file
+    assert latest_image == image_file

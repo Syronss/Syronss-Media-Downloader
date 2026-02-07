@@ -33,7 +33,8 @@ Syronss's Media Downloader offers a sleek GUI and robust backend to handle vario
 * 🎵 **TikTok Support**
     * Download viral TikTok videos effortlessly.
 * 📸 **Instagram Integration**
-    * Download Posts, Reels, IGTV, and Story videos.
+    * Download Posts, Reels, IGTV, and Stories with automatic media detection (video/photo).
+    * **Instagram Smart Mode:** Dedicated UI controls for Post/Reel/Story type and media preference (Auto/Video/Image).
     * **Advanced Auth:** Supports login with 2FA (Two-Factor Authentication) for private content.
     * Secure session management.
 * 🌐 **More Platform Coverage**
