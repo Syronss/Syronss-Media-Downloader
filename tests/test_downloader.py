@@ -63,3 +63,9 @@ def test_find_latest_downloaded_file_with_media_mode(tmp_path: Path) -> None:
     assert latest_auto is not None
     assert latest_video == video_file
     assert latest_image == image_file
+
+
+def test_extract_shortcode_with_username_path(tmp_path: Path) -> None:
+    downloader = InstagramDownloader(tmp_path)
+    assert downloader._extract_shortcode("https://www.instagram.com/cey_lazuli/p/DTAyNDAgqxt") == "DTAyNDAgqxt"
+    assert downloader._extract_shortcode("https://www.instagram.com/cey_lazuli/reel/ABCdef123/") == "ABCdef123"

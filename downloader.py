@@ -475,14 +475,15 @@ class InstagramDownloader(BaseDownloader):
         return {}
 
     def _extract_shortcode(self, url: str) -> Optional[str]:
+        normalized = url.strip().rstrip("/")
         patterns = [
-            r"instagram\.com/p/([A-Za-z0-9_-]+)",
-            r"instagram\.com/reel/([A-Za-z0-9_-]+)",
-            r"instagram\.com/tv/([A-Za-z0-9_-]+)",
-            r"instagram\.com/reels/([A-Za-z0-9_-]+)",
+            r"instagram\.com/(?:[^/]+/)?p/([A-Za-z0-9_-]+)",
+            r"instagram\.com/(?:[^/]+/)?reel/([A-Za-z0-9_-]+)",
+            r"instagram\.com/(?:[^/]+/)?reels/([A-Za-z0-9_-]+)",
+            r"instagram\.com/(?:[^/]+/)?tv/([A-Za-z0-9_-]+)",
         ]
         for pattern in patterns:
-            match = re.search(pattern, url)
+            match = re.search(pattern, normalized, flags=re.IGNORECASE)
             if match:
                 return match.group(1)
         return None
@@ -491,7 +492,7 @@ class InstagramDownloader(BaseDownloader):
         lowered = url.lower()
         if "/stories/" in lowered:
             return "story"
-        if "/reel/" in lowered or "/reels/" in lowered or "/tv/" in lowered:
+        if re.search(r"/(?:[^/]+/)?(reel|reels|tv)/", lowered):
             return "reel"
         return "post"
 
