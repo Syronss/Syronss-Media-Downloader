@@ -2,6 +2,7 @@
 Syronss's Media Downloader - Launcher & Dependency Manager
 Robust error handling, FFmpeg auto-download, and graceful startup
 """
+import multiprocessing
 import sys
 import os
 import subprocess
@@ -15,6 +16,9 @@ import zipfile
 import shutil
 import ssl
 import traceback
+
+# CRITICAL: Required for PyInstaller frozen builds to prevent infinite respawn
+multiprocessing.freeze_support()
 
 
 def get_app_dir():

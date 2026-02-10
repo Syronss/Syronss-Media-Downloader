@@ -4,6 +4,9 @@ YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, Twitch
 Multi-language, queue system, stats, batch import, auto-folder, notifications
 """
 
+import multiprocessing
+multiprocessing.freeze_support()
+
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import threading
