@@ -1,194 +1,207 @@
 # 🎬 Syronss's Media Downloader v2.0
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black" alt="Platform">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge" alt="UI Framework">
-  <img src="https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge" alt="Version">
-  <a href="https://github.com/Syronss/Syronss-Media-Downloader"><img src="https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github" alt="GitHub"></a>
+  <img src="[https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)" alt="Python">
+  <img src="[https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black](https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black)" alt="Platform">
+  <img src="[https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)" alt="License">
+  <img src="[https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge](https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge)" alt="UI Framework">
+  <img src="[https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge](https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge)" alt="Version">
+  <a href="[https://github.com/Syronss/Syronss-Media-Downloader](https://github.com/Syronss/Syronss-Media-Downloader)"><img src="[https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github](https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github)" alt="GitHub"></a>
 </p>
 
 <p align="center">
-  <b>YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, Twitch</b><br>
-  Video ve MP3 indirme uygulaması • Modern, hızlı, güvenli
+  <b>YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, Twitch</b>
+
+
+
+
+  Video and MP3 downloader application • Modern, fast, secure
 </p>
 
 ---
 
-## ✨ v2.0 Yenilikler
+## ✨ What's New in v2.0
 
-| Özellik | Açıklama |
-|---------|----------|
-| 🌍 **Çoklu Dil** | Türkçe ve İngilizce tam destek, dinamik geçiş |
-| 📊 **İstatistik Paneli** | Toplam indirme, boyut ve platform dağılımı |
-| 🔍 **Geçmiş Arama** | İndirme geçmişinde arama ve filtreleme |
-| 📄 **Toplu İçe Aktarma** | Birden fazla URL'yi tek seferde kuyruğa ekleme |
-| 📂 **Otomatik Klasörleme** | Platform bazlı alt klasörlere otomatik ayırma |
-| 📋 **Yapıştır Butonu** | Tek tıkla panodan URL yapıştırma |
-| 🔔 **Bildirimler** | İndirme tamamlandığında görev çubuğu bildirimi |
-| ⚙️ **Gelişmiş Ayarlar** | Dil, tema, şablon, bildirim ve güncelleme ayarları |
-| 🔄 **yt-dlp Güncelleme** | Otomatik güncelleme kontrolü ve güncelleme |
-| 🧵 **Thread Güvenliği** | Çoklu indirme için güvenli durum yönetimi |
-| 🏗️ **Modüler Mimari** | Temiz, bakımı kolay kod yapısı |
-
----
-
-## 🚀 Özellikler
-
-### 📥 Desteklenen Platformlar
-- **YouTube** — Video, MP3, altyazı, playlist
-- **TikTok** — Video indirme
-- **Instagram** — Post, Reel, Story (2FA desteği ile giriş)
-- **Facebook** — Video indirme
-- **X (Twitter)** — Video indirme
-- **Vimeo** — Video indirme
-- **Dailymotion** — Video indirme
-- **Twitch** — VOD ve klip
-
-### 🎨 Modern Arayüz
-- CustomTkinter tabanlı şık tasarım
-- Koyu / Açık tema desteği (kalıcı)
-- Video önizleme paneli
-- İndirme kuyruğu sistemi
-- İndirme geçmişi (arama destekli)
-- İstatistik paneli
-
-### 📸 Instagram Entegrasyonu
-- Kullanıcı adı/şifre ile güvenli giriş
-- 2FA (iki faktörlü kimlik doğrulama) desteği
-- Post, Reel, Story indirme
-- Video/Görsel modu seçimi
-- Güvenli oturum yönetimi
-
-### 🌍 Çoklu Dil Desteği
-- 🇹🇷 Türkçe (varsayılan)
-- 🇬🇧 English
-- Ayarlardan tek tıkla dil değiştirme
+| Feature | Description |
+| --- | --- |
+| 🌍 **Multi-Language** | Full support for Turkish and English, dynamic switching |
+| 📊 **Statistics Panel** | Total downloads, size, and platform distribution |
+| 🔍 **History Search** | Search and filter within download history |
+| 📄 **Batch Import** | Add multiple URLs to the queue at once |
+| 📂 **Auto-Folder** | Automatically sort downloads into platform-based subfolders |
+| 📋 **Paste Button** | One-click URL pasting from clipboard |
+| 🔔 **Notifications** | Taskbar notification upon download completion |
+| ⚙️ **Advanced Settings** | Language, theme, template, notification, and update settings |
+| 🔄 **yt-dlp Update** | Automatic update check and updater |
+| 🧵 **Thread Safety** | Safe state management for concurrent downloads |
+| 🏗️ **Modular Architecture** | Clean, easy-to-maintain code structure |
 
 ---
 
-## 📦 Kurulum
+## 🚀 Features
 
-### Gereksinimler
-- Python 3.8+
-- FFmpeg (MP3 dönüşümü için — otomatik indirilir)
+### 📥 Supported Platforms
 
-### Hızlı Kurulum
+* **YouTube** — Video, MP3, subtitles, playlists
+* **TikTok** — Video downloading
+* **Instagram** — Post, Reel, Story (Login with 2FA support)
+* **Facebook** — Video downloading
+* **X (Twitter)** — Video downloading
+* **Vimeo** — Video downloading
+* **Dailymotion** — Video downloading
+* **Twitch** — VODs and clips
+
+### 🎨 Modern Interface
+
+* Stylish design based on CustomTkinter
+* Dark / Light theme support (persistent)
+* Video preview panel
+* Download queue system
+* Download history (with search support)
+* Statistics panel
+
+### 📸 Instagram Integration
+
+* Secure login via username/password
+* 2FA (Two-Factor Authentication) support
+* Post, Reel, Story downloading
+* Video/Image mode selection
+* Secure session management
+
+### 🌍 Multi-Language Support
+
+* 🇹🇷 Turkish (default)
+* 🇬🇧 English
+* One-click language switching from settings
+
+---
+
+## 📦 Installation
+
+### Requirements
+
+* Python 3.8+
+* FFmpeg (for MP3 conversion — automatically downloaded)
+
+### Quick Setup
 
 ```bash
-# Depoyu klonla
+# Clone the repository
 git clone https://github.com/Syronss/Syronss-Media-Downloader.git
 cd Syronss-Media-Downloader
 
-# Bağımlılıkları kur
+# Install dependencies
 pip install -r requirements.txt
 
-# Uygulamayı başlat
+# Start the application
 python launcher.py
+
 ```
 
 ### Standalone EXE
 
 ```bash
 python build_app.py
+
 ```
 
-> EXE dosyası `dist/SyronssMediaDownloader/` klasöründe oluşturulur.
+> The EXE file is created in the `dist/SyronssMediaDownloader/` folder.
 
 ---
 
-## 📁 Proje Yapısı
+## 📁 Project Structure
 
 ```
 📂 Syronss-Media-Downloader/
-├── 🚀 launcher.py          # Launcher ve bağımlılık yönetimi
-├── 🎯 main.py              # Ana uygulama (VideoDownloaderApp)
-├── ⬇️ downloader.py         # İndirme backend'leri (yt-dlp + instaloader)
-├── 🔧 utils.py             # Yardımcı fonksiyonlar
-├── 📋 constants.py          # Sabit değerler ve yapılandırma
-├── 🏗️ build_app.py          # PyInstaller build scripti
+├── 🚀 launcher.py          # Launcher and dependency management
+├── 🎯 main.py              # Main application (VideoDownloaderApp)
+├── ⬇️ downloader.py         # Download backends (yt-dlp + instaloader)
+├── 🔧 utils.py             # Utility functions
+├── 📋 constants.py          # Constants and configuration
+├── 🏗️ build_app.py          # PyInstaller build script
 │
-├── 🌍 i18n/                 # Çoklu dil desteği
-│   ├── __init__.py          # Dil yöneticisi
-│   ├── tr.json              # Türkçe çeviriler
-│   └── en.json              # İngilizce çeviriler
+├── 🌍 i18n/                 # Multi-language support
+│   ├── __init__.py          # Language manager
+│   ├── tr.json              # Turkish translations
+│   └── en.json              # English translations
 │
-├── 🧩 widgets/              # UI bileşenleri
-│   ├── queue_item.py        # Kuyruk öğesi widget'ı
-│   ├── video_preview.py     # Video önizleme çerçevesi
-│   ├── history_item.py      # Geçmiş öğesi widget'ı
-│   └── stats_panel.py       # İstatistik paneli
+├── 🧩 widgets/              # UI components
+│   ├── queue_item.py        # Queue item widget
+│   ├── video_preview.py     # Video preview frame
+│   ├── history_item.py      # History item widget
+│   └── stats_panel.py       # Statistics panel
 │
-├── 💬 dialogs/              # Diyalog pencereleri
-│   ├── instagram_login.py   # Instagram giriş (2FA destekli)
-│   ├── settings.py          # Ayarlar diyaloğu
-│   └── batch_import.py      # Toplu URL içe aktarma
+├── 💬 dialogs/              # Dialog windows
+│   ├── instagram_login.py   # Instagram login (2FA supported)
+│   ├── settings.py          # Settings dialog
+│   └── batch_import.py      # Batch URL import
 │
-├── 🧪 tests/                # Testler
-│   ├── conftest.py          # Paylaşılan fixture'lar
-│   ├── test_downloader.py   # İndirici testleri
-│   ├── test_utils.py        # Yardımcı fonksiyon testleri
-│   └── test_constants_i18n.py # Sabitler ve i18n testleri
+├── 🧪 tests/                # Tests
+│   ├── conftest.py          # Shared fixtures
+│   ├── test_downloader.py   # Downloader tests
+│   ├── test_utils.py        # Utility function tests
+│   └── test_constants_i18n.py # Constants and i18n tests
 │
 ├── 📄 requirements.txt
 ├── 📄 LICENSE (MIT)
 └── 📄 README.md
+
 ```
 
 ---
 
-## 🧪 Testler
+## 🧪 Tests
 
 ```bash
-# Tüm testleri çalıştır
+# Run all tests
 python -m pytest tests/ -v
 
-# Belirli bir test dosyasını çalıştır
+# Run a specific test file
 python -m pytest tests/test_utils.py -v
+
 ```
 
 ---
 
-## ⚙️ Ayarlar
+## ⚙️ Settings
 
-Uygulama ayarları `~/.video_downloader_settings.json` dosyasında saklanır:
+Application settings are stored in the `~/.video_downloader_settings.json` file:
 
-| Ayar | Açıklama | Varsayılan |
-|------|----------|------------|
-| `language` | Arayüz dili | `tr` |
-| `theme` | Tema (dark/light) | `dark` |
-| `filename_template` | Dosya adı şablonu | `%(title)s` |
-| `auto_folder` | Platform bazlı klasörleme | `false` |
-| `notifications` | İndirme bildirimleri | `true` |
-| `auto_update_check` | yt-dlp güncelleme kontrolü | `true` |
-
----
-
-## 🔒 Güvenlik
-
-- Instagram şifreleri bellekte saklanmaz, giriş sonrası temizlenir
-- Oturum dosyaları çıkışta güvenli şekilde silinir
-- Oturum bilgileri `.gitignore` ile korunur
+| Setting | Description | Default |
+| --- | --- | --- |
+| `language` | Interface language | `tr` |
+| `theme` | Theme (dark/light) | `dark` |
+| `filename_template` | Filename template | `%(title)s` |
+| `auto_folder` | Platform-based folder organization | `false` |
+| `notifications` | Download notifications | `true` |
+| `auto_update_check` | yt-dlp update check | `true` |
 
 ---
 
-## 🤝 Katkıda Bulunma
+## 🔒 Security
 
-1. Bu depoyu fork edin
-2. Feature branch oluşturun (`git checkout -b feature/yeni-ozellik`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Yeni özellik eklendi'`)
-4. Branch'e push edin (`git push origin feature/yeni-ozellik`)
-5. Pull Request oluşturun
+* Instagram passwords are not stored in memory; they are cleared immediately after login.
+* Session files are securely deleted upon exit.
+* Session information is protected via `.gitignore`.
 
 ---
 
-## 📃 Lisans
+## 🤝 Contributing
 
-Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Added new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Create a Pull Request
 
 ---
 
-## 👤 Geliştirici
+## 📃 License
+
+This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
+
+---
+
+## 👤 Developer
 
 **Syronss** — [GitHub](https://github.com/Syronss)
