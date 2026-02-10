@@ -1,20 +1,16 @@
 # 🎬 Syronss's Media Downloader v2.0
 
 <p align="center">
-  <img src="[https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)" alt="Python">
-  <img src="[https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black](https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black)" alt="Platform">
-  <img src="[https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)" alt="License">
-  <img src="[https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge](https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge)" alt="UI Framework">
-  <img src="[https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge](https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge)" alt="Version">
-  <a href="[https://github.com/Syronss/Syronss-Media-Downloader](https://github.com/Syronss/Syronss-Media-Downloader)"><img src="[https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github](https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github)" alt="GitHub"></a>
+  <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Windows-lightgrey.svg?style=for-the-badge&logo=windows&logoColor=black" alt="Platform">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/UI-CustomTkinter-blueviolet.svg?style=for-the-badge" alt="UI Framework">
+  <img src="https://img.shields.io/badge/Version-2.0.0-orange.svg?style=for-the-badge" alt="Version">
+  <a href="https://github.com/Syronss/Syronss-Media-Downloader"><img src="https://img.shields.io/badge/GitHub-Syronss-181717.svg?style=for-the-badge&logo=github" alt="GitHub"></a>
 </p>
 
 <p align="center">
-  <b>YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, Twitch</b>
-
-
-
-
+  <b>YouTube, TikTok, Instagram, Facebook, X, Vimeo, Dailymotion, Twitch</b><br>
   Video and MP3 downloader application • Modern, fast, secure
 </p>
 
