@@ -189,6 +189,9 @@ def get_platform_download_path(base_path: Path, platform: str, auto_folder: bool
 
 def check_ytdlp_update() -> Optional[str]:
     """Check if yt-dlp has an available update. Returns new version or None."""
+    # In frozen builds, sys.executable is the EXE, not Python — skip pip calls
+    if getattr(sys, 'frozen', False):
+        return None
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip", "index", "versions", "yt-dlp"],
@@ -210,6 +213,9 @@ def check_ytdlp_update() -> Optional[str]:
 
 def update_ytdlp() -> bool:
     """Update yt-dlp to latest version."""
+    # In frozen builds, sys.executable is the EXE, not Python — can't pip install
+    if getattr(sys, 'frozen', False):
+        return False
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"],
